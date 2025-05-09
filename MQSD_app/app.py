@@ -33,6 +33,8 @@ app = Flask(__name__)
 
 # Configuration
 app.secret_key = os.getenv('SECRET_KEY')
+print("MONGO_URI =", os.getenv('MONGO_URI'))
+
 app.config["MONGO_URI"] = os.getenv('MONGO_URI')
 app.config['SESSION_PROTECTION'] = 'strong'
 app.config['WTF_CSRF_ENABLED'] = False  # Temporarily disable CSRF for debugging
