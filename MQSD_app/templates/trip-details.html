@@ -1,0 +1,479 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""/>
+<style>
+    :root {
+        --primary-green: #00A651;
+        --secondary-orange: #FF9800;
+        --text-dark: #333;
+        --bg-light: #f8f9fa;
+        --card-radius: 20px;
+        --card-shadow: 0 4px 8px rgba(0,0,0,0.08);
+    }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        color: var(--text-dark);
+        background-color: var(--bg-light);
+        padding-bottom: 2rem;
+        overflow-x: hidden;
+    }
+
+    html, body {
+        scroll-behavior: smooth;
+        overscroll-behavior: none;
+        height: 100%;
+    }
+
+    .navbar {
+        padding: 20px 0;
+        background-color: #F7F7F7;
+        box-shadow: var(--card-shadow);
+        margin: 20px auto 0 auto;
+        width: 98%;
+        max-width: 1280px;
+        border-radius: var(--card-radius);
+        left: unset;
+        transform: unset;
+        position: fixed;
+        right: 0;
+        left: 0;
+    }
+
+    .navbar > .container {
+        padding: 0 35px;
+        margin: 0 auto;
+    }
+
+    .navbar-brand img {
+        height: 35px;
+        width: auto;
+    }
+
+    .navbar-nav .nav-link {
+        color: var(--text-dark);
+        font-weight: 500;
+        padding: 8px 23px;
+        margin: 0 6px;
+        transition: color 0.3s ease;
+    }
+
+    .navbar-nav .nav-link:hover, .navbar-nav .nav-link.active {
+        color: var(--primary-green);
+    }
+
+    .nav-profile-section {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 8px 16px;
+        border-radius: 50px;
+        background: rgba(0,0,0,0.05);
+    }
+
+    .profile-link {
+        text-decoration: none;
+        color: var(--text-dark);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        transition: opacity 0.3s ease;
+    }
+
+    .profile-link:hover {
+        opacity: 0.8;
+        color: var(--text-dark);
+    }
+
+    .nav-profile-image {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        object-fit: cover;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    #main-box {
+        margin-top: 8%;
+    }
+    
+    .main-container {
+        width: 99.7%;
+        max-width: 1472px;
+        margin: 2rem auto;
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        min-height: calc(100vh - 280px);
+        position: relative;
+    }
+
+    .column-container {
+        height: 100%;
+        overflow: hidden;
+    }
+
+    .column-header {
+        margin-bottom: 1rem;
+        position: sticky;
+        top: 0;
+        background: white;
+        padding: 0.5rem 0;
+        z-index: 1;
+    }
+
+    .scrollable-column {
+        height: calc(100% - 40px);
+        overflow-y: auto;
+        padding-right: 15px;
+        scrollbar-width: thin;
+        scrollbar-color: #888 #f1f1f1;
+    }
+
+    .scrollable-column::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .scrollable-column::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+    }
+
+    .scrollable-column::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 4px;
+    }
+
+    .scrollable-column::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+
+    .trip-card {
+        background: white;
+        border-radius: 10px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        transition: transform 0.2s ease;
+    }
+
+    .trip-card:hover {
+        transform: translateY(-2px);
+    }
+
+    .trip-time {
+        color: var(--primary-green);
+        font-weight: bold;
+    }
+
+    .date-nav {
+        background: white;
+        padding: 0.75rem;
+        border-radius: 10px;
+        margin-bottom: 1rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .date-item {
+        text-align: center;
+        padding: 0.35rem;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .date-item div {
+        font-size: 1.4rem;
+        font-weight: 700;
+        line-height: 1;
+        color: var(--primary-green);
+        margin-bottom: 2px;
+    }
+
+    .date-item small {
+        font-size: 0.75rem;
+        color: var(--primary-green);
+        font-weight: 500;
+    }
+
+    .date-item:hover {
+        background: rgba(0, 166, 81, 0.1);
+    }
+
+    .date-item.active {
+        background: var(--primary-green);
+    }
+
+    .date-item.active div,
+    .date-item.active small {
+        color: white;
+    }
+
+    .map-container {
+        width: 100%;
+        height: 60vh;
+        max-height: 600px;
+        background: #e9ecef;
+        border-radius: 10px;
+        margin-top: 1rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    #map {
+        width: 100%;
+        height: 100%;
+        border-radius: 10px;
+        z-index: 1;
+    }
+
+    .mapboxgl-popup {
+        max-width: 300px;
+    }
+
+    .mapboxgl-popup-content {
+        padding: 15px;
+        border-radius: 8px;
+    }
+
+    .popup-title {
+        font-weight: 600;
+        margin-bottom: 5px;
+        color: var(--primary-green);
+    }
+
+    .popup-description {
+        font-size: 0.9rem;
+        color: var(--text-dark);
+    }
+
+    /* Update popup styles for Leaflet */
+    .leaflet-popup-content-wrapper {
+        padding: 15px;
+        border-radius: 8px;
+    }
+
+    .leaflet-popup-content {
+        margin: 0;
+        max-width: 300px;
+    }
+
+    .leaflet-container {
+        outline: none !important;
+    }
+
+    #map:focus {
+        outline: none !important;
+    }
+
+    /* Fix potential map dragging glitch */
+    .map-container {
+        will-change: transform;
+        backface-visibility: hidden;
+        transform: translateZ(0);
+    }
+
+    @media (max-width: 768px) {
+        .main-container {
+            margin: 1rem auto;
+            padding: 1rem;
+        }
+
+        .scrollable-column {
+            height: auto;
+            max-height: 500px;
+        }
+
+        .map-container {
+            height: 400px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="main-container" id ='main-box'>
+    <div class="row column-container">
+        <!-- Left Column -->
+        <div class="col-md-6">
+            <div class="column-header">
+                <h4>Today's Activities</h4>
+            </div>
+            <div class="scrollable-column">
+                <div class="trip-cards">
+                    {% for day in itinerary.itinerary %}
+                        <div class="day-activities" data-date="{{ day.date }}">
+                            {% for activity in day.activities %}
+                                <div class="trip-card">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <h5 class="mb-2">{{ activity.title }}</h5>
+                                            <p class="text-muted mb-0">{{ activity.description }}</p>
+                                            {% if activity.google_maps_link %}
+                                                <a href="{{ activity.google_maps_link }}" class="btn btn-sm btn-outline-success mt-2" target="_blank">
+                                                    <i class="fas fa-map-marker-alt me-1"></i>View on Map
+                                                </a>
+                                            {% else %}
+                                                <button class="btn btn-sm btn-outline-secondary mt-2" disabled>
+                                                    <i class="fas fa-map-marker-alt me-1"></i>View on Map
+                                                </button>
+                                            {% endif %}
+                                        </div>
+                                        <div class="trip-time">{{ activity.time }}</div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column -->
+        <div class="col-md-6">
+            <div class="right-column">
+                <div class="date-nav" id="date-box">
+                    <div class="row">
+                        {% for day in itinerary.itinerary %}
+                            <div class="col text-center date-item" data-date="{{ day.date }}">
+                                <div>{{ day.date|datetime|strftime('%d') }}</div>
+                                <small>{{ day.date|datetime|strftime('%b') }}</small>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="map-container">
+                    <div id="map"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if not is_authenticated %}
+<div class="mt-4 container">
+    <div class="alert alert-info border-0 rounded-3">
+        <i class="fas fa-info-circle me-2"></i>
+        Want to save this trip and get more features?
+        <a href="{{ url_for('signup') }}" class="alert-link ms-1">Sign up now</a>!
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<!-- Replace Mapbox JS with Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+        crossorigin=""></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize places array with activity data
+        const places = [];
+        const itineraryData = {{ itinerary|tojson|safe }};
+        
+        if (itineraryData && itineraryData.itinerary) {
+            itineraryData.itinerary.forEach(function(day) {
+                if (day.activities) {
+                    day.activities.forEach(function(activity) {
+                        places.push({
+                            name: activity.title || "Untitled Activity",
+                            description: activity.description || "",
+                            time: activity.time || "No time specified",
+                            coords: activity.coordinates || [46.6753, 24.7136],
+                            mapsLink: activity.google_maps_link || ""
+                        });
+                    });
+                }
+            });
+        }
+
+        // Initialize map with OpenStreetMap
+        let map = L.map('map').setView(
+            places.length > 0 ? places[0].coords : [24.7136, 46.6753], 
+            12
+        );
+
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Add markers for each place
+        const markers = [];
+        places.forEach(function(place) {
+            if (place.coords && Array.isArray(place.coords) && place.coords.length === 2) {
+                // Create popup content
+                const popupContent = `
+                    <div class="popup-title">${place.name || 'Untitled Activity'}</div>
+                    ${place.description ? `<div class="popup-description">${place.description}</div>` : ''}
+                    ${place.time ? `<div class="popup-time mt-2">🕒 ${place.time}</div>` : ''}
+                    ${place.mapsLink ? `
+                        <a href="${place.mapsLink}" class="btn btn-sm btn-outline-success mt-2" target="_blank">
+                            <i class="fas fa-map-marker-alt me-1"></i>View on Google Maps
+                        </a>
+                    ` : ''}
+                `;
+
+                // Create marker with custom icon
+                const marker = L.marker([place.coords[1], place.coords[0]], {
+                    icon: L.divIcon({
+                        className: 'custom-div-icon',
+                        html: `<div style="background-color: #00A651; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white;"></div>`,
+                        iconSize: [12, 12],
+                        iconAnchor: [6, 6]
+                    })
+                })
+                .bindPopup(popupContent)
+                .addTo(map);
+
+                markers.push(marker);
+            }
+        });
+
+        // Fit map to show all markers
+        if (markers.length > 0) {
+            const group = L.featureGroup(markers);
+            map.fitBounds(group.getBounds().pad(0.1));
+        }
+       // Prevent map click/focus from scrolling container
+        map.getContainer().addEventListener('mousedown', function (e) {
+            e.preventDefault();
+        });
+
+ 
+
+        // Date navigation code
+        document.querySelectorAll('.date-item').forEach(function(item) {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.date-item').forEach(function(date) {
+                    date.classList.remove('active');
+                });
+                this.classList.add('active');
+
+                const selectedDate = this.dataset.date;
+                document.querySelectorAll('.day-activities').forEach(function(day) {
+                    day.style.display = (day.dataset.date === selectedDate) ? 'block' : 'none';
+                });
+
+                // Trigger map resize after showing/hiding activities
+                if (map) {
+                    map.invalidateSize();
+                    console.log("map invalidated")
+                }
+            });
+        });
+
+        const firstDateItem = document.querySelector('.date-item');
+        if (firstDateItem) {
+            firstDateItem.click();
+        }
+    });
+</script>
+{% endblock %}

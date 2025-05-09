@@ -1,0 +1,1 @@
+web: gunicorn MQSD_app.app:app

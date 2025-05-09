@@ -1,0 +1,424 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+<style>
+
+    html, body {
+        height: 100%;
+        overflow: hidden; /* Prevent body scroll */
+    }
+    .dashboard-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 2rem;
+        position: fixed;
+    top: 80px; /* height of navbar */
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    padding-top: 1rem;
+    }
+    .btn btn-primary mt-3 {
+        color: #198754;
+    }
+
+    .view-toggle {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: #fff;
+        padding: 1rem 0;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    .view-toggle .btn-group {
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto;
+    }
+
+    .view-toggle .btn {
+        flex: 1;
+        padding: 0.75rem 1.5rem;
+        font-weight: 500;
+    }
+
+    .view-toggle .btn.active {
+        background-color: #198754;
+        border-color: #198754;
+        color: white;
+    }
+
+    .profile-info-row {
+        background: #f8f9fa;
+        padding: 1.5rem 0;
+        margin-bottom: 2rem;
+    }
+
+    .profile-info {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .profile-left {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .profile-image-large {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .profile-name {
+        font-size: 1.5rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .profile-username {
+        color: #6c757d;
+        margin: 0;
+    }
+    
+
+    .column-container {
+        margin-top: 2rem;
+    }
+
+    .column-header {
+        margin-bottom: 1rem;
+    }
+
+    .scrollable-column {
+        height: 100%;
+        overflow-y: auto;
+        padding-right: 1rem;
+    }
+
+    .trip-cards {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .trip-card {
+        background: #fff;
+        border: 1px solid #e9ecef;
+        border-radius: 0.75rem;
+        padding: 1.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .trip-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .trip-time {
+        color: #6c757d;
+        font-weight: 500;
+    }
+
+    .date-navigation {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        overflow-x: auto;
+        padding-bottom: 1rem;
+    }
+
+    .date-item {
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .date-item.active {
+        background: #198754;
+        color: white;
+    }
+
+    .action-buttons {
+        margin-top: 2rem;
+        padding-top: 1rem;
+        border-top: 1px solid #e9ecef;
+    }
+
+    /* Custom scrollbar */
+    .scrollable-column::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .scrollable-column::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 3px;
+    }
+
+    .scrollable-column::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 3px;
+    }
+
+    .scrollable-column::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+
+    /* All Trips View Styles */
+    .all-trips-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+        padding: 1rem 0;
+    }
+
+    .trip-card-large {
+        background: #fff;
+        border-radius: 1rem;
+        overflow: hidden;
+        transition: transform 0.3s ease;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .trip-card-large:hover {
+        transform: translateY(-5px);
+    }
+
+    .trip-card-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .trip-card-content {
+        padding: 1.5rem;
+    }
+
+    .trip-card-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .trip-card-date {
+        color: #6c757d;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+
+    .trip-card-button {
+        width: 100%;
+        padding: 0.75rem;
+        background: #198754;
+        color: white;
+        border: none;
+        border-radius: 0.5rem;
+        font-weight: 500;
+        transition: background-color 0.3s ease;
+    }
+
+    .trip-card-button:hover {
+        background: #146c43;
+    }
+
+    .view-section {
+        display: none;
+    }
+
+    .view-section.active {
+        display: block;
+    }
+
+    /* Auth Prompt Styles */
+    .auth-prompt {
+        background: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 0.75rem;
+        margin-top: 2rem;
+        text-align: center;
+    }
+
+    .auth-prompt p {
+        font-size: 1.1rem;
+        color: #495057;
+    }
+
+    .auth-prompt .btn {
+        padding: 0.5rem 1.5rem;
+        margin: 0 0.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid p-0">
+    <!-- Main Content -->
+    <div class="dashboard-container mt-5">
+        {% if is_authenticated %}
+            {% if trips %}
+                
+
+             
+
+                            <!-- All Trips View -->
+            <div id="all-trips-view" class="view-section active">
+                <div class="all-trips-grid">
+                    {% for trip in trips %}
+                        <div class="trip-card-large">
+                            <img src="{{ url_for('static', filename='images/destinations/' + trip.location|lower|replace(' ', '-') + '.jpg') }}" 
+                                alt="{{ trip.location }}" 
+                                class="trip-card-image"
+                                onerror="this.src='{{ url_for('static', filename='images/default-destination.jpg') }}'">
+                            <div class="trip-card-content">
+                                <h3 class="trip-card-title">{{ trip.location }}</h3>
+                                <p class="trip-card-date">
+                                    <i class="fas fa-calendar-alt me-2"></i>
+                                    {{ trip.date_in }} - {{ trip.date_out }}
+                                </p>
+                                <a href="{{ url_for('trip_details', trip_id=trip._id) }}" class="trip-card-button text-decoration-none">
+                                    All Details
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            {% else %}
+                <div class="text-center py-5">
+                    <p class="no-trips h5">No saved trips found.</p>
+                    <a href="{{ url_for('index') }}" class="btn btn-primary mt-3">Plan a New Trip</a>
+                </div>
+            {% endif %}
+        {% else %}
+            {% if trip %}
+                <div class="trip-details">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="trip-card">
+                                <h2 class="mb-4">Your Trip to {{ trip.location }}</h2>
+                                <div class="trip-info">
+                                    <p class="mb-3"><i class="fas fa-calendar me-2"></i> <strong>Dates:</strong> {{ trip.date_in }} - {{ trip.date_out }}</p>
+                                    <p class="mb-3"><i class="fas fa-users me-2"></i> <strong>Travelers:</strong> {{ trip.adults }} Adults, {{ trip.children }} Children</p>
+                                    <p class="mb-3"><i class="fas fa-tag me-2"></i> <strong>Type:</strong> {{ trip.trip_type }}</p>
+                                    <p class="mb-0"><i class="fas fa-wallet me-2"></i> <strong>Budget:</strong> {{ trip.budget_type }}</p>
+                                </div>
+                                
+                                <div class="auth-prompt">
+                                    <p class="mb-3">Want to save this trip to your account?</p>
+                                    <div>
+                                        <a href="{{ url_for('login') }}" class="btn btn-outline-primary">Log in</a>
+                                        <a href="{{ url_for('signup') }}" class="btn btn-outline-success">Sign up</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-8">
+                            {% if itinerary %}
+                                <div class="date-navigation">
+                                    {% for day in itinerary.itinerary %}
+                                        <div class="date-item" data-date="{{ day.date }}">
+                                            {% if day.date %}
+                                                {{ day.date|datetime|strftime('%b %d') }}
+                                            {% else %}
+                                                No date
+                                            {% endif %}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                
+                                <div class="scrollable-column">
+                                    <div class="trip-cards">
+                                        {% for day in itinerary.itinerary %}
+                                            <div class="day-activities" data-date="{{ day.date }}">
+                                                {% for activity in day.activities %}
+                                                    <div class="trip-card">
+                                                        <div class="d-flex justify-content-between align-items-start">
+                                                            <div>
+                                                                <h5 class="mb-2">{{ activity.title }}</h5>
+                                                                <p class="text-muted mb-0">{{ activity.description }}</p>
+                                                            </div>
+                                                            <div class="trip-time">{{ activity.time }}</div>
+                                                        </div>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                
+                                
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <p class="no-trips h5">No trip data found.</p>
+                    <a href="{{ url_for('index') }}" class="btn btn-primary mt-3">Plan a New Trip</a>
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // View toggle functionality
+        const viewButtons = document.querySelectorAll('.view-toggle .btn');
+        const viewSections = document.querySelectorAll('.view-section');
+
+        viewButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Update button states
+                viewButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+
+                // Show selected view
+                const viewToShow = this.getAttribute('data-view');
+                viewSections.forEach(section => {
+                    section.classList.remove('active');
+                    if (section.id === `${viewToShow}-view`) {
+                        section.classList.add('active');
+                    }
+                });
+            });
+        });
+
+        // Date navigation functionality
+        document.querySelectorAll('.date-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.date-item').forEach(date => {
+                    date.classList.remove('active');
+                });
+                this.classList.add('active');
+                const selectedDate = this.dataset.date;
+                document.querySelectorAll('.day-activities').forEach(day => {
+                    if (day.dataset.date === selectedDate) {
+                        day.style.display = 'block';
+                    } else {
+                        day.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // Trigger click on the first date to show initial data
+        const firstDateItem = document.querySelector('.date-item');
+        if (firstDateItem) {
+            firstDateItem.click();
+        }
+    });
+</script>
+{% endblock %}

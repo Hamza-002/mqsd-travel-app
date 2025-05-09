@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Settings - MQSD</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../static/css/styles.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-green: #00A651;
+            --secondary-orange: #FF9800;
+            --text-dark: #222;
+            --bg-light: #f8f9fa;
+            --card-radius: 20px;
+            --card-shadow: 0 4px 8px rgba(0,0,0,0.08);
+        }
+
+        .settings-header {
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../static/images/sgi-target-bؤanner.jpg');
+            background-size: cover;
+            background-position: center;
+            padding: 8rem 0 4rem;
+            color: white;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .settings-card {
+            background: white;
+            border-radius: var(--card-radius);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--card-shadow);
+        }
+
+        .settings-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .settings-title i {
+            color: var(--primary-green);
+        }
+
+        .settings-item {
+            padding: 1.5rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .settings-item:last-child {
+            border-bottom: none;
+        }
+
+        .settings-item-title {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .settings-item-description {
+            color: #666;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .settings-control {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn-edit {
+            color: var(--primary-green);
+            background: none;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: background-color 0.3s;
+        }
+
+        .btn-edit:hover {
+            background-color: rgba(0, 166, 81, 0.1);
+        }
+
+        .form-switch .form-check-input {
+            width: 3em;
+            height: 1.5em;
+            margin-left: 0;
+        }
+
+        .form-switch .form-check-input:checked {
+            background-color: var(--primary-green);
+            border-color: var(--primary-green);
+        }
+
+        .footer {
+            padding-top: 4rem;
+        }
+
+        /* Navigation Profile Styles */
+        .nav-profile-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-profile-image {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .nav-profile-section span {
+            font-size: 0.95rem;
+            color: var(--text-dark);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container{% if current_user.is_authenticated %}{% else %}-fluid px-4{% endif %}">
+            <a class="navbar-brand" href="{{ url_for('index') }}">
+                <img src="{{ url_for('static', filename='images/logo_black_green.svg') }}" alt="MQSD Logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse justify-content-between align-items-center" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('cities') }}">Cities</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('about_saudi') }}">About Saudi</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('trip_dashboard') }}">Trips</a>
+                    </li>
+                </ul>
+
+                {% if current_user.is_authenticated %}
+                    <!-- ✅ Navbar for logged-in user -->
+                    <div class="nav-profile-section">
+                        <a href="{{ url_for('account') }}" class="profile-link">
+                            <span>Hi {{ current_user.full_name.split(' ')[0] }} 👋</span>
+                            <img src="{{ url_for('static', filename='images/profile.png') }}" alt="Profile" class="nav-profile-image">
+                        </a>
+                    </div>
+                {% else %}
+                    <!-- 🔐 Navbar for guests -->
+                    <div class="nav-buttons d-flex">
+                        <a href="{{ url_for('login') }}" class="btn btn-login me-2">Log in</a>
+                        <a href="{{ url_for('signup') }}" class="btn btn-signup">Sign up</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Settings Header -->
+    <section class="settings-header">
+        <div class="container">
+            <h1 class="mb-2">Account Settings</h1>
+            <p class="mb-0">Manage your account preferences and settings</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="row">
+            <!-- Account Settings -->
+            <div class="col-lg-8 mx-auto">
+                <!-- Profile Settings -->
+                <div class="settings-card">
+                    <h2 class="settings-title">
+                        <i class="fas fa-user-circle"></i>
+                        Profile Settings
+                    </h2>
+                    <div class="settings-item">
+                        <div>
+                            <h3 class="settings-item-title">Personal Information</h3>
+                            <p class="settings-item-description">Update your name, email, and contact details</p>
+                        </div>
+                        <button class="btn-edit">
+                            <i class="fas fa-pencil"></i>
+                        </button>
+                    </div>
+                    <div class="settings-item">
+                        <div>
+                            <h3 class="settings-item-title">Profile Picture</h3>
+                            <p class="settings-item-description">Change your profile photo</p>
+                        </div>
+                        <button class="btn-edit">
+                            <i class="fas fa-camera"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Security Settings -->
+                <div class="settings-card">
+                    <h2 class="settings-title">
+                        <i class="fas fa-shield-alt"></i>
+                        Security
+                    </h2>
+                    <div class="settings-item">
+                        <div>
+                            <h3 class="settings-item-title">Password</h3>
+                            <p class="settings-item-description">Change your password</p>
+                        </div>
+                        <button class="btn-edit">
+                            <i class="fas fa-key"></i>
+                        </button>
+                    </div>
+                    <div class="settings-item">
+                        <div>
+                            <h3 class="settings-item-title">Two-Factor Authentication</h3>
+                            <p class="settings-item-description">Add an extra layer of security</p>
+                        </div>
+                        <div class="form-check form-switch settings-control">
+                            <input class="form-check-input" type="checkbox" id="twoFactorSwitch">
+                        </div>
+                    </div>
+                </div>
+
+
+             
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row g-4 mb-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="footer-brand mb-4">
+                        <img src="../static/images/logo_black_green.svg" alt="MQSD Logo" style="height:35px;">
+                    </div>
+                    <p class="text-muted">Discover the beauty and tradition of Saudi Arabia with MQSD. Your trusted companion for exploring the Kingdom's most remarkable destinations.</p>
+                    <div class="social-links mt-3">
+                        <a href="#" class="me-3 text-dark"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="me-3 text-dark"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="me-3 text-dark"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-dark"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h5 class="mb-3">Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="index.html" class="text-decoration-none text-muted">Home</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Cities</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Trips</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h5 class="mb-3">Popular Cities</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="cities/riyadh.html" class="text-decoration-none text-muted">Riyadh</a></li>
+                        <li class="mb-2"><a href="cities/jeddah.html" class="text-decoration-none text-muted">Jeddah</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Mecca</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Medina</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <h5 class="mb-3">Newsletter</h5>
+                    <p class="text-muted">Subscribe to our newsletter for travel updates and exclusive offers.</p>
+                    <div class="input-group mb-3">
+                        <input type="email" class="form-control" placeholder="Enter your email" aria-label="Enter your email">
+                        <button class="btn btn-dark" type="button" style="background-color: var(--primary-green);">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+            <div class="border-top pt-4">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <p class="text-muted mb-md-0">&copy; 2023 MQSD. All rights reserved.</p>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <ul class="list-inline mb-0">
+                            <li class="list-inline-item"><a href="#" class="text-muted text-decoration-none">Privacy Policy</a></li>
+                            <li class="list-inline-item ms-3"><a href="#" class="text-muted text-decoration-none">Terms of Use</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 

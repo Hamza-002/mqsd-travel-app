@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Destinations - MQSD</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-green: #00A651;
+            --secondary-orange: #FF9800;
+            --text-dark: #333;
+            --bg-light: #f8f9fa;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            color: var(--text-dark);
+            background-color: var(--bg-light);
+        }
+
+        .navbar {
+            padding: 20px 0;
+            background-color: #F7F7F7;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 98%;
+            max-width: 1472px;
+            border-radius: 20px;
+            margin: 20px auto;
+        }
+
+        .navbar > .container {
+            max-width: 100%;
+            padding: 0 35px;
+        }
+
+        .navbar-brand img {
+            height: 35px;
+            width: auto;
+        }
+
+        .navbar-nav .nav-link {
+            color: #333;
+            font-weight: 500;
+            padding: 8px 23px;
+            margin: 0 6px;
+            transition: color 0.3s ease;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: var(--primary-green);
+        }
+
+        .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .profile-image {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .nav-profile-image {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .nav-profile-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 16px;
+            border-radius: 50px;
+            background: rgba(0,0,0,0.05);
+        }
+
+        .profile-link {
+            text-decoration: none;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: opacity 0.3s ease;
+        }
+
+        .profile-link:hover {
+            opacity: 0.8;
+            color: var(--text-dark);
+        }
+
+        .main-container {
+            width: 98%;
+            max-width: 1472px;
+            margin: 2rem auto;
+            padding: 2rem;
+        }
+
+        .destinations-header {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .destinations-header h1 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+        }
+
+        .destinations-header p {
+            font-size: 1.1rem;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .destination-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 1rem;
+        }
+
+        .destination-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .destination-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .destination-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .destination-content {
+            padding: 1.5rem;
+        }
+
+        .destination-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .destination-description {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .destination-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--primary-green);
+            font-size: 0.9rem;
+        }
+
+        .destination-rating {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .destination-rating i {
+            color: var(--secondary-orange);
+        }
+
+        @media (max-width: 768px) {
+            .destinations-header h1 {
+                font-size: 2rem;
+            }
+
+            .destination-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 1.5rem;
+            }
+        }
+
+        .auth-buttons .btn {
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .auth-buttons .btn-outline-success {
+            border-color: var(--primary-green);
+            color: var(--primary-green);
+        }
+
+        .auth-buttons .btn-success {
+            background-color: var(--primary-green);
+            border-color: var(--primary-green);
+        }
+
+        .auth-container {
+            max-width: 1400px !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container{% if current_user.is_authenticated %}{% else %}-fluid px-4{% endif %}">
+            <a class="navbar-brand" href="{{ url_for('index') }}">
+                <img src="{{ url_for('static', filename='images/logo_black_green.svg') }}" alt="MQSD Logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse justify-content-between align-items-center" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('cities') }}">Cities</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('about_saudi') }}">About Saudi</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('trip_dashboard') }}">Trips</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('chat_page') }}">Travel Assistant</a>
+                    </li>
+                    
+                </ul>
+
+                {% if current_user.is_authenticated %}
+                    <!-- ✅ Navbar for logged-in user -->
+                    <div class="nav-profile-section">
+                        <a href="{{ url_for('account') }}" class="profile-link">
+                            <span>Hi {{ current_user.full_name.split(' ')[0] }} 👋</span>
+                            <img src="{{ url_for('static', filename='images/profile.png') }}" alt="Profile" class="nav-profile-image">
+                        </a>
+                    </div>
+                {% else %}
+                    <!-- 🔐 Navbar for guests -->
+                    <div class="nav-buttons d-flex">
+                        <a href="{{ url_for('login') }}" class="btn btn-login me-2">Log in</a>
+                        <a href="{{ url_for('signup') }}" class="btn btn-signup">Sign up</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <div class="destinations-header">
+            <h1>Explore Saudi Arabia</h1>
+            <p>Discover the beauty and rich culture of Saudi Arabia's most captivating cities. From historic landmarks to modern marvels, embark on an unforgettable journey.</p>
+        </div>
+
+        <div class="destination-grid">
+            <!-- Riyadh -->
+            <a href="{{ url_for('city', city_name='riyadh') }}" class="text-decoration-none">
+                <div class="destination-card">
+                    <img src="../static/images/cities/Riyadh.jpg" alt="Riyadh" class="destination-image">
+                    <div class="destination-content">
+                        <h3 class="destination-title">Riyadh</h3>
+                        <p class="destination-description">The capital city, where modern skyscrapers meet ancient traditions. Experience the heart of Saudi Arabia.</p>
+                        <div class="destination-meta">
+                            <span>15 attractions</span>
+                            <div class="destination-rating">
+                                <i class="fas fa-star"></i>
+                                <span>4.8</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Jeddah -->
+            <a href="{{ url_for('city', city_name='jeddah') }}" class="text-decoration-none">
+                <div class="destination-card">
+                    <img src="../static/images/cities/sea.jpg" alt="Jeddah" class="destination-image">
+                    <div class="destination-content">
+                        <h3 class="destination-title">Jeddah</h3>
+                        <p class="destination-description">A coastal gem combining historical charm with contemporary lifestyle. Gateway to the Red Sea.</p>
+                        <div class="destination-meta">
+                            <span>20 attractions</span>
+                            <div class="destination-rating">
+                                <i class="fas fa-star"></i>
+                                <span>4.7</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Al-Ula -->
+            <a href="{{ url_for('city', city_name='alula') }}" class="text-decoration-none">
+                <div class="destination-card">
+                    <img src="../static/images/cities/alula.jpg" alt="Al-Ula" class="destination-image">
+                    <div class="destination-content">
+                        <h3 class="destination-title">Al-Ula</h3>
+                        <p class="destination-description">An ancient oasis of culture, featuring stunning rock formations and archaeological wonders.</p>
+                        <div class="destination-meta">
+                            <span>14 attractions</span>
+                            <div class="destination-rating">
+                                <i class="fas fa-star"></i>
+                                <span>4.9</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Taif -->
+            <a href="{{ url_for('city', city_name='taif') }}" class="text-decoration-none">
+                <div class="destination-card">
+                    <img src="../static/images/cities/taif.jpg" alt="Taif" class="destination-image">
+                    <div class="destination-content">
+                        <h3 class="destination-title">Taif</h3>
+                        <p class="destination-description">Known as the 'City of Roses', featuring beautiful gardens, pleasant weather, and rich agricultural heritage.</p>
+                        <div class="destination-meta">
+                            <span>16 attractions</span>
+                            <div class="destination-rating">
+                                <i class="fas fa-star"></i>
+                                <span>4.7</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Abha -->
+            <a href="{{ url_for('city', city_name='abha') }}" class="text-decoration-none">
+                <div class="destination-card">
+                    <img src="../static/images/cities/abha.jpg" alt="Abha" class="destination-image">
+                    <div class="destination-content">
+                        <h3 class="destination-title">Abha</h3>
+                        <p class="destination-description">A scenic mountain city with cool climate, traditional architecture, and stunning natural landscapes.</p>
+                        <div class="destination-meta">
+                            <span>13 attractions</span>
+                            <div class="destination-rating">
+                                <i class="fas fa-star"></i>
+                                <span>4.8</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <!-- Footer -->
+    <footer class="footer mt-5">
+        <div class="container">
+            <div class="row g-4 mb-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="footer-brand mb-4">
+                        <img src="../static/images/logo_black_green.svg" alt="MQSD Logo" style="height:35px;">
+                    </div>
+                    <p class="text-muted">Discover the beauty and tradition of Saudi Arabia with MQSD. Your trusted companion for exploring the Kingdom's most remarkable destinations.</p>
+                    <div class="social-links mt-3">
+                        <a href="#" class="me-3 text-dark"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="me-3 text-dark"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="me-3 text-dark"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-dark"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h5 class="mb-3">Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Destinations</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">About Saudi</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Trips</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h5 class="mb-3">Popular Cities</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="cities/riyadh.html" class="text-decoration-none text-muted">Riyadh</a></li>
+                        <li class="mb-2"><a href="cities/jeddah.html" class="text-decoration-none text-muted">Jeddah</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Mecca</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Medina</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <h5 class="mb-3">Newsletter</h5>
+                    <p class="text-muted">Subscribe to our newsletter for travel updates and exclusive offers.</p>
+                    <div class="input-group mb-3">
+                        <input type="email" class="form-control" placeholder="Enter your email" aria-label="Enter your email">
+                        <button class="btn btn-dark" type="button" style="background-color: var(--primary-green);">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+            <div class="border-top pt-4">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <p class="text-muted mb-md-0">&copy; 2023 MQSD. All rights reserved.</p>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <ul class="list-inline mb-0">
+                            <li class="list-inline-item"><a href="#" class="text-muted text-decoration-none">Privacy Policy</a></li>
+                            <li class="list-inline-item ms-3"><a href="#" class="text-muted text-decoration-none">Terms of Use</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <style>
+        /* Footer Styles */
+        .footer {
+            background: #f7f7f7;
+            padding: 4rem 0 2rem;
+            margin-top: 3rem;
+        }
+        .footer h5 {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+        .social-links a {
+            font-size: 1.1rem;
+            transition: color 0.3s;
+        }
+        .social-links a:hover {
+            color: var(--primary-green) !important;
+        }
+        .footer .list-unstyled a {
+            transition: color 0.3s;
+        }
+        .footer .list-unstyled a:hover {
+            color: var(--primary-green) !important;
+        }
+        .footer .form-control {
+            border-radius: 8px 0 0 8px;
+            border: 1px solid #dee2e6;
+        }
+        .footer .btn {
+            border-radius: 0 8px 8px 0;
+            padding: 0.375rem 1.5rem;
+        }
+        .footer .btn:hover {
+            background-color: #008c44 !important;
+        }
+    </style>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 

@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Saudi Arabia - MQSD</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../static/css/styles.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-green: #00A651;
+            --secondary-orange: #FF9800;
+            --text-dark: #222;
+            --bg-light: #f8f9fa;
+            --card-radius: 20px;
+            --card-shadow: 0 4px 8px rgba(0,0,0,0.08);
+        }
+
+        .hero-section {
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../static/images/about-saudi-hero.jpg');
+            background-size: cover;
+            background-position: center;
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: var(--card-radius);
+            padding: 2rem;
+            height: 100%;
+            transition: transform 0.3s ease;
+            box-shadow: var(--card-shadow);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary-green);
+            margin-bottom: 1.5rem;
+        }
+
+        .festivals-section {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('../static/images/festivals-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 6rem 0;
+            text-align: center;
+        }
+
+        .experience-card {
+            background: white;
+            border-radius: var(--card-radius);
+            overflow: hidden;
+            height: 100%;
+            transition: transform 0.3s ease;
+            box-shadow: var(--card-shadow);
+        }
+
+        .experience-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .experience-img {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .why-saudi-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .why-saudi-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--primary-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .btn-explore {
+            background: var(--primary-green);
+            color: white;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-explore:hover {
+            background: #008c44;
+            color: white;
+            transform: translateY(-3px);
+        }
+        .destination-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        .nav-profile-image {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .nav-profile-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 16px;
+            border-radius: 50px;
+            background: rgba(0,0,0,0.05);
+        }
+        .btn-login {
+            color: #00A651;
+            border: 1px solid #00A651;
+            padding: 8px 24px;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+        .btn-signup {
+            background: #00A651;
+            color: white;
+            padding: 8px 24px;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+        .btn-login:hover {
+            background: rgba(0,166,81,0.1);
+            color: #00A651;
+        }
+        .btn-signup:hover {
+            background: #008c44;
+            color: white;
+        }
+        .profile-link {
+            text-decoration: none;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: opacity 0.3s ease;
+        }
+        .profile-link:hover {
+            opacity: 0.8;
+            color: var(--text-dark);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('index') }}">
+                <img src="{{ url_for('static', filename='images/logo_black_green.svg') }}" alt="MQSD Logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse justify-content-between align-items-center" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('cities') }}">Cities</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('about_saudi') }}">About Saudi</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('trip_dashboard') }}">Trips</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('chat_page') }}">Travel Assistant</a>
+                      </li>
+                </ul>
+
+                {% if current_user.is_authenticated %}
+                    <!-- ✅ Navbar for logged-in user -->
+                    <div class="nav-profile-section">
+                        <a href="{{ url_for('account') }}" class="profile-link">
+                            <span>Hi {{ current_user.full_name.split(' ')[0] }} 👋</span>
+                            <img src="{{ url_for('static', filename='images/profile.png') }}" alt="Profile" class="nav-profile-image">
+                        </a>
+                    </div>
+                {% else %}
+                    <!-- 🔐 Navbar for guests -->
+                    <div class="nav-buttons d-flex">
+                        <a href="{{ url_for('login') }}" class="btn btn-login me-2">Log in</a>
+                        <a href="{{ url_for('signup') }}" class="btn btn-signup">Sign up</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section" style="
+        background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+        url('../static/images/saudi-hero.jpg');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        padding: 120px 0;
+        color: white;
+        position: relative;
+        min-height: 80vh;
+    ">
+        <div class="container">
+            <h1 class="display-3 fw-bold mb-4">Discover the Future of Saudi Arabia</h1>
+            <p class="lead mb-5" style="font-size: 1.4rem;">A land where ancient culture meets a bold vision for tomorrow. Welcome to a new era of tourism, innovation, and unforgettable experiences.</p>
+            <a href="#highlights" class="btn btn-explore">Explore Now</a>
+        </div>
+    </section>
+
+    <!-- Saudi Arabia Highlights -->
+    <section class="py-5" id="highlights">
+        <div class="container">
+            <h2 class="section-title">Discover the Wonders of Saudi Arabia</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-city"></i>
+                        </div>
+                        <h3 class="h4 mb-3">Qiddiya Project</h3>
+                        <p>A future city of entertainment, sports, and culture—Qiddiya redefines fun in the heart of Saudi Arabia.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-gamepad"></i>
+                        </div>
+                        <h3 class="h4 mb-3">Esports & Gaming</h3>
+                        <p>The Kingdom is leading the global gaming scene with world-class events and investments.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3 class="h4 mb-3">Vision 2030</h3>
+                        <p>An ambitious roadmap shaping a vibrant, diverse, and globally connected Saudi Arabia.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Festivals & Seasons -->
+    <section class="festivals-section" style="
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+    url('../static/images/c3.jpg');
+    background-size: cover;">
+        <div class="container">
+            <h2 class="section-title">Celebrate Culture Like Never Before</h2>
+            <p class="lead mb-5">From the dazzling Riyadh Season to magical AlUla Moments, Saudi Arabia hosts immersive festivals full of music, art, food, and unforgettable vibes.</p>
+            <a href="https://www.visitsaudi.com/ar/calendar" class="btn btn-explore">View Upcoming Events</a>
+        </div>
+    </section>
+
+    <!-- Unforgettable Experiences -->
+    <section class="py-5">
+        <div class="container">
+            <h2 class="section-title">Discover Unforgettable Experiences in Saudi Arabia</h2>
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-3">
+                    <div class="experience-card" >
+                        <div class="experience-img" style="background-image: url('../static/images/food.jpg');"></div>
+                        <div class="p-4">
+                            <h3 class="h5 mb-3">Savor the Flavors of Saudi Arabia</h3>
+                            <p>Experience the rich culinary heritage of Saudi Arabia, from traditional dishes to modern fusion cuisineks.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="experience-card">
+                        <div class="experience-img" style="background-image: url('../static/images/heritage.jpg');"></div>
+                        <div class="p-4">
+                            <h3 class="h5 mb-3">Cultural Depth & Heritage</h3>
+                            <p>Visit UNESCO sites, ancient cities, and rich traditions that span millennia.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="experience-card">
+                        <div class="experience-img" style="background-image: url('../static/images/Saudi rally dakar.jpeg');"></div>
+                        <div class="p-4">
+                            <h3 class="h5 mb-3">Customized Adventures</h3>
+                            <p>From luxury travel to raw exploration—tailor your journey to your spirit.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="experience-card">
+                        <div class="experience-img" style="background-image: url('../static/images/riyadh-season-2024_crop-460x620.webp');"></div>
+                        <div class="p-4">
+                            <h3 class="h5 mb-3">Events That Inspire</h3>
+                            <p>World-class concerts, sporting events, and unique seasonal celebrations.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Cities -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <h2 class="section-title">Featured Cities to Explore</h2>
+            <p class="text-center text-muted mb-5" style="max-width: 700px; margin: 0 auto;">Embark on a journey through Saudi Arabia's most captivating cities, each offering unique experiences and unforgettable memories.</p>
+            <div class="row g-4">
+                <!-- Riyadh -->
+                <div class="col-md-6 col-lg-3">
+                    <a href="{{ url_for('city', city_name='riyadh') }}" class="text-decoration-none">
+                    <div class="destination-card">
+                        <img src="../static/images/cities/Riyadh.jpg" alt="Riyadh" class="destination-image" style="height: 200px; width: 100%; object-fit: cover; border-radius: var(--card-radius) var(--card-radius) 0 0;">
+                        <div class="p-4">
+                            <h3 class="h5 mb-2">Riyadh</h3>
+                            <p class="mb-3" style="font-size: 0.95rem; color: #666;">The capital city, where modern skyscrapers meet ancient traditions. Experience the heart of Saudi Arabia.</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-primary" style="color: var(--primary-green) !important;">15 attractions</span>
+                                <a href="cities/riyadh.html" class="btn btn-sm btn-outline-success">Explore</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Jeddah -->
+                <div class="col-md-6 col-lg-3">
+                    <a href="{{ url_for('city', city_name='jeddah') }}" class="text-decoration-none">
+                    <div class="destination-card">
+                        <img src="../static/images/cities/sea.jpg" alt="Jeddah" class="destination-image" style="height: 200px; width: 100%; object-fit: cover; border-radius: var(--card-radius) var(--card-radius) 0 0;">
+                        <div class="p-4">
+                            <h3 class="h5 mb-2">Jeddah</h3>
+                            <p class="mb-3" style="font-size: 0.95rem; color: #666;">A coastal gem combining historical charm with contemporary lifestyle. Gateway to the Red Sea.</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-primary" style="color: var(--primary-green) !important;">20 attractions</span>
+                                <a href="cities/jeddah.html" class="btn btn-sm btn-outline-success">Explore</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Al-Ula -->
+                <div class="col-md-6 col-lg-3">
+                    <a href="{{ url_for('city', city_name='alula') }}" class="text-decoration-none">
+                    <div class="destination-card">
+                        <img src="../static/images/cities/alula.jpg" alt="Al-Ula" class="destination-image" style="height: 200px; width: 100%; object-fit: cover; border-radius: var(--card-radius) var(--card-radius) 0 0;">
+                        <div class="p-4">
+                            <h3 class="h5 mb-2">Al-Ula</h3>
+                            <p class="mb-3" style="font-size: 0.95rem; color: #666;">An ancient oasis of culture, featuring stunning rock formations and archaeological wonders.</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-primary" style="color: var(--primary-green) !important;">14 attractions</span>
+                                <a href="#" class="btn btn-sm btn-outline-success">Explore</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Abha -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="destination-card">
+                        <a href="{{ url_for('city', city_name='abha') }}" class="text-decoration-none">
+                        <img src="../static/images/cities/abha.jpg" alt="Abha" class="destination-image" style="height: 200px; width: 100%; object-fit: cover; border-radius: var(--card-radius) var(--card-radius) 0 0;">
+                        <div class="p-4">
+                            <h3 class="h5 mb-2">Abha</h3>
+                            <p class="mb-3" style="font-size: 0.95rem; color: #666;">A scenic mountain city with cool climate, traditional architecture, and stunning natural landscapes.</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-primary" style="color: var(--primary-green) !important;">13 attractions</span>
+                                <a href="#" class="btn btn-sm btn-outline-success">Explore</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-5">
+                <a href="{{ url_for('cities') }}" class="btn btn-explore">View All Cities</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Saudi Arabia -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <h2 class="section-title">Why Saudi Arabia is Your Next Destination</h2>
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="why-saudi-item">
+                        <div class="why-saudi-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div>
+                            <h3 class="h5 mb-2">Safe & welcoming environment</h3>
+                            <p class="mb-0">Experience the legendary hospitality and security that makes Saudi Arabia a perfect destination for all travelers.</p>
+                        </div>
+                    </div>
+                    <div class="why-saudi-item">
+                        <div class="why-saudi-icon">
+                            <i class="fas fa-road"></i>
+                        </div>
+                        <div>
+                            <h3 class="h5 mb-2">Rapidly growing infrastructure</h3>
+                            <p class="mb-0">Modern airports, highways, and world-class facilities make traveling comfortable and convenient.</p>
+                        </div>
+                    </div>
+                    <div class="why-saudi-item">
+                        <div class="why-saudi-icon">
+                            <i class="fas fa-balance-scale"></i>
+                        </div>
+                        <div>
+                            <h3 class="h5 mb-2">Unique blend of old and new</h3>
+                            <p class="mb-0">Where ancient traditions harmoniously coexist with cutting-edge innovation and modern lifestyle.</p>
+                        </div>
+                    </div>
+                    <div class="why-saudi-item">
+                        <div class="why-saudi-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div>
+                            <h3 class="h5 mb-2">Year-round events & attractions</h3>
+                            <p class="mb-0">Every season brings new experiences, from cultural festivals to sporting events and entertainment shows.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row g-4 mb-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="footer-brand mb-4">
+                        <img src="../static/images/logo_black_green.svg" alt="MQSD Logo" style="height:35px;">
+                    </div>
+                    <p class="text-muted">Discover the beauty and tradition of Saudi Arabia with MQSD. Your trusted companion for exploring the Kingdom's most remarkable destinations.</p>
+                    <div class="social-links mt-3">
+                        <a href="#" class="me-3 text-dark"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="me-3 text-dark"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="me-3 text-dark"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-dark"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h5 class="mb-3">Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="index.html" class="text-decoration-none text-muted">Home</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Cities</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Trips</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h5 class="mb-3">Popular Cities</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="cities/riyadh.html" class="text-decoration-none text-muted">Riyadh</a></li>
+                        <li class="mb-2"><a href="cities/jeddah.html" class="text-decoration-none text-muted">Jeddah</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Mecca</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Medina</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <h5 class="mb-3">Newsletter</h5>
+                    <p class="text-muted">Subscribe to our newsletter for travel updates and exclusive offers.</p>
+                    <div class="input-group mb-3">
+                        <input type="email" class="form-control" placeholder="Enter your email" aria-label="Enter your email">
+                        <button class="btn btn-dark" type="button" style="background-color: var(--primary-green);">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+            <div class="border-top pt-4">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <p class="text-muted mb-md-0">&copy; 2023 MQSD. All rights reserved.</p>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <ul class="list-inline mb-0">
+                            <li class="list-inline-item"><a href="#" class="text-muted text-decoration-none">Privacy Policy</a></li>
+                            <li class="list-inline-item ms-3"><a href="#" class="text-muted text-decoration-none">Terms of Use</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 
