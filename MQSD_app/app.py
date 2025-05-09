@@ -16,7 +16,7 @@ import logging
 from bson.objectid import ObjectId
 from dotenv import load_dotenv
 import pymongo
-from models import User
+from MQSD_app.models import User
 import base64
 from PIL import Image
 from io import BytesIO
@@ -44,6 +44,8 @@ app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME') or 'hamzajereb00@gmail.com'
 app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD') or 'zwah kdlx qphx dnvq'
 openai.api_key = os.getenv('OPENAI_API_KEY')
+
+#hamza_worked on the whole website alone
 
 # MongoDB Configuration
 mongo = PyMongo(app)
