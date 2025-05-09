@@ -16,7 +16,7 @@ import logging
 from bson.objectid import ObjectId
 from dotenv import load_dotenv
 import pymongo
-from MQSD_app.models import User
+from models import User
 import base64
 from PIL import Image
 from io import BytesIO
