@@ -993,37 +993,7 @@ Only respond with Saudi-based destinations. If a user asks about international p
 
     return Response(stream_with_context(generate()), content_type='text/plain')
 
-@app.route("/test-openai")
-def test_openai():
-    try:
-        import openai
-        from openai import OpenAIError
 
-        # Ensure API key is picked up
-        api_key = openai.api_key or os.getenv("OPENAI_API_KEY")
-
-        if not api_key:
-            return {"status": "fail", "error": "API key not found in environment."}, 500
-
-        # Simple request to OpenAI
-        response = openai.ChatCompletion.create(
-            model="gpt-4",
-            messages=[
-                {"role": "system", "content": "You are a helpful assistant."},
-                {"role": "user", "content": "Hello!"}
-            ]
-        )
-
-        return {"status": "success", "response": response["choices"][0]["message"]["content"]}
-
-    except openai.error.RateLimitError as e:
-        return {"status": "fail", "error": "Rate limit exceeded", "details": str(e)}, 429
-
-    except openai.error.AuthenticationError as e:
-        return {"status": "fail", "error": "Authentication failed", "details": str(e)}, 401
-
-    except Exception as e:
-        return {"status": "fail", "error": "Unexpected error", "details": str(e)}, 500
 
 
 
