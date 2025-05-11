@@ -17,7 +17,7 @@ from bson.objectid import ObjectId
 from dotenv import load_dotenv
 import pymongo
 import base64
-from MQSD_app.models import User
+from models import User
 from PIL import Image
 from io import BytesIO
 from werkzeug.utils import secure_filename
